@@ -6,9 +6,9 @@ import sys
 import time
 from mimetypes import guess_type
 
-from base_logger import logger, set_logger_level
-from config import ConfigReader
-from FanCommander import FanCommander
+from api.base_logger import logger, set_logger_level
+from api.config import ConfigReader
+from api.FanCommander import FanCommander
 from tornado.ioloop import IOLoop
 from tornado.web import (
     Application,
@@ -517,7 +517,13 @@ def shutdown():
     stop_loop()
 
 
-def main(cmd_args):
+def main():
+    parser = argparse.ArgumentParser(
+        description="Karanovic Research - Fan Controller API service"
+    )
+    parser.add_argument("-l", "--logging", type=str, default="info")
+    cmd_args = parser.parse_args()
+
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
     set_logger_level(cmd_args.logging)
@@ -529,9 +535,4 @@ def main(cmd_args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Karanovic Research - Fan Controller API service"
-    )
-    parser.add_argument("-l", "--logging", type=str, default="info")
-    args = parser.parse_args()
-    main(args)
+    main()

@@ -1,6 +1,7 @@
 import os
+from pathlib import Path
 
-from base_logger import logger
+from api.base_logger import logger
 from ruamel import yaml
 
 
@@ -43,7 +44,7 @@ class ConfigReader:
     }
 
     def __init__(self, config_file):
-        self.config_path = os.path.join(os.path.dirname(__file__), config_file)
+        self.config_path = (Path(".") / config_file).absolute()
         self._load_config()  # Load configuration from .yaml file
 
     # Save current configuration to .yaml file

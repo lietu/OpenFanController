@@ -4,7 +4,7 @@ from threading import Lock
 
 import serial as _serial
 import serial.tools.list_ports_common as _lpc
-from base_logger import logger
+from api.base_logger import logger
 from serial.tools.list_ports import comports
 
 

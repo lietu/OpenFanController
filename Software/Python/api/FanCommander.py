@@ -1,6 +1,6 @@
-from base_logger import logger
+from api.base_logger import logger
+from api.serial_driver import SerialHardware
 from serial.tools.list_ports import comports
-from serial_driver import SerialHardware
 
 
 class FanCommander(SerialHardware):

@@ -11,7 +11,7 @@ On any OS, if you have Python 3.9 (or higher) and [Poetry](https://python-poetry
 
 1. Clone this repository and navigate to `Software/Python` folder.
 2. Install Python dependencies by running `poetry install`
-3. Run the main application with `poetry run python webserver.py`
+3. Run the main application with `poetry run serve`
 4. Open `http://localhost:3000` to access the Web GUI
 <br><br>
 
@@ -63,7 +63,12 @@ This will install all the necessary dependencies.
 
 ### How to run the server application
 
-In your terminal, navigate to the `Software/Python` directory of OpenFAN and type `python webserver.py`
+In your terminal, navigate to the `Software/Python` directory of OpenFAN and run
+
+```shell
+poetry install
+poetry run serve
+```
 
 This will start the OpenFAN server. After this you can start using the gui through web browser by openning `https://localhost:3000` or use the API as described in the documentation.
 

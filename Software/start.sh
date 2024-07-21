@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd /mnt/OpenFan
-exec poetry run python webserver.py
+exec poetry run serve
