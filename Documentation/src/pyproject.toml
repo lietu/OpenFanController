@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "openfancontroller-docs"
+version = "0.1.0"
+description = "Docs for OpenFanController"
+authors = ["Sasa Karanovic <sasa@karanovic.ca>", "Janne Enberg <janne.enberg@lietu.net>"]
+license = "GPLv3"
+readme = "../README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.9"
+mkdocs = "^1.6.0"
+mkdocs-enumerate-headings-plugin = "^0.6.2"
+mkdocs-video = "^1.5.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

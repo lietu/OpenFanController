@@ -10,20 +10,24 @@ LABEL org.opencontainers.image.source=https://github.com/sasakaranovic/openfanco
 # Disable Prompt During Packages Installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Update Ubuntu Software repository
-RUN apt update
+ENV PATH="$PATH:/root/.local/bin"
 
-# Install nginx, php-fpm and supervisord from ubuntu repository
-RUN apt install -y python3 python3-pip
-RUN rm -rf /var/lib/apt/lists/*
-RUN apt clean
+# Update APT repos, install dependencies
+RUN apt update \
+ && apt install -y python3 python3-pip curl \
+ && curl -sSL https://install.python-poetry.org | python3 - \
+ && rm -rf /var/lib/apt/lists/* \
+ && apt clean \
+ && :
 
 # Copy all source files
 ADD Software/Python /mnt/OpenFan
 ADD Software/start.sh /mnt/OpenFan
 
 # Install python modules
-RUN pip3 install -r /mnt/OpenFan/requirements.txt
+RUN cd /mnt/OpenFan/ \
+ && poetry install \
+ && :
 
 RUN ["chmod", "+x", "/mnt/OpenFan/start.sh"]
 

@@ -232,3 +232,4 @@ cython_debug/
 
 *.pid.lock
 upload/*
+Documentation/docs-html

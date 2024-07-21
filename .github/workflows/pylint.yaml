@@ -8,23 +8,36 @@ on:
 jobs:
   pylint:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.9.9
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.9.9"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pylint
-        pip install pylint-exit
-        pip install -r Software/Python/requirements.txt
-    - name: Run Pylint on code
-      run: |
-        pylint --rc-file=Software/Python/pylintrc --disable=import-error $(git ls-files '*.py') || pylint-exit --error-fail $?
-        if [ $? -ne 0 ]; then
-          exit 1
-        fi
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.9.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9.9"
+
+      - name: Install Poetry and pre-commit
+        run: pip install poetry pre-commit
+
+      - name: Run pre-commit
+        run: pre-commit run --all-files
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint
+          pip install pylint-exit
+
+          cd Software/Python
+          poetry install
+
+      - name: Run pre-commit
+        run: pre-commit run --all-files
+
+      - name: Run Pylint on code
+        run: |
+          pylint --rc-file=Software/Python/pylintrc --disable=import-error $(git ls-files '*.py') || pylint-exit --error-fail $?
+          if [ $? -ne 0 ]; then
+            exit 1
+          fi

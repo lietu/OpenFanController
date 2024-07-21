@@ -7,11 +7,11 @@ There are many ways to run the OpenFAN software.
 
 ### Running from source [Win/Linux/Mac]
 
-On any OS, if you have Python 3.9 (or higher) and PIP installed, you can run from source code.
+On any OS, if you have Python 3.9 (or higher) and [Poetry](https://python-poetry.org/docs/#installation) installed, you can run from source code.
 
 1. Clone this repository and navigate to `Software/Python` folder.
-2. Install Python dependencies by running `pip install -r requirements.txt`
-3. Run the main application with `python webserver.py`
+2. Install Python dependencies by running `poetry install`
+3. Run the main application with `poetry run python webserver.py`
 4. Open `http://localhost:3000` to access the Web GUI
 <br><br>
 
@@ -56,7 +56,7 @@ After that, you will need to install the PIP Python package manager.
 
 In order to install project dependencies you can open a terminal and navigate to the OpenFAN `Software/Python` directory.
 
-Then type `pip install -r requirements.txt`
+Then type `poetry install`
 
 This will install all the necessary dependencies.
 
