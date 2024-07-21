@@ -20,4 +20,3 @@ OpenFan is an open-source open-hardware PC fan controller created by [Saša Kara
 ## Useful links
 
 [Project Home Page](https://sasakaranovic.com/projects/openfan-controller/) - [YouTube Project Video](http://www.youtube.com/watch?v=C8tcsyASQRM) - [GitHub repository](https://github.com/SasaKaranovic/OpenFanController) - [Documentation](https://github.com/SasaKaranovic/OpenFanController/tree/master/Documentation/)
-

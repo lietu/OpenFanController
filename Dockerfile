@@ -33,4 +33,3 @@ EXPOSE 3000
 
 # Run entrypoint
 ENTRYPOINT ["/mnt/OpenFan/start.sh"]
-

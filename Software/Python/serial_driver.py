@@ -1,16 +1,23 @@
 import re
 import time
 from threading import Lock
+
 import serial as _serial
-import serial.tools.list_ports as _lp
 import serial.tools.list_ports_common as _lpc
-from serial.tools.list_ports import comports
 from base_logger import logger
+from serial.tools.list_ports import comports
 
 
 class SerialHardware(object):
-    def __init__( self, port_info, flush_on_write=True, serialPrefix = '', serialSuffix = '\r\n', timeout=0.2, debug_uart=False):
-
+    def __init__(
+        self,
+        port_info,
+        flush_on_write=True,
+        serialPrefix="",
+        serialSuffix="\r\n",
+        timeout=0.2,
+        debug_uart=False,
+    ):
         self.lock = Lock()
 
         self.flush_on_write = flush_on_write
@@ -25,7 +32,11 @@ class SerialHardware(object):
             self.port_info = port_info
 
         if not isinstance(self.port_info, _lpc.ListPortInfo):
-            raise TypeError("The port_info must be of type {} (given: {})".format(self.__class__, _lpc.ListPortInfo))
+            raise TypeError(
+                "The port_info must be of type {} (given: {})".format(
+                    self.__class__, _lpc.ListPortInfo
+                )
+            )
 
         self.port = _serial.Serial(
             port=self.port_info.device,
@@ -33,8 +44,8 @@ class SerialHardware(object):
             bytesize=_serial.EIGHTBITS,
             parity=_serial.PARITY_NONE,
             stopbits=_serial.STOPBITS_ONE,
-            timeout=timeout, # seconds
-            write_timeout=timeout, # seconds
+            timeout=timeout,  # seconds
+            write_timeout=timeout,  # seconds
         )
 
         if debug_uart:
@@ -74,7 +85,11 @@ class SerialHardware(object):
 
     def assert_open(self):
         if not self.is_open():
-            raise _serial.SerialException("Serial port must be open. port: \"{}\" description \"{}\"".format(self.port_info.name, self.description()))
+            raise _serial.SerialException(
+                'Serial port must be open. port: "{}" description "{}"'.format(
+                    self.port_info.name, self.description()
+                )
+            )
 
     def get_port_info(self):
         return self.port_info
@@ -103,7 +118,7 @@ class SerialHardware(object):
 
         if not status_re:
             regex = status_re
-        compiled_re = re.compile(regex, flags=re.IGNORECASE)    #pylint: disable=possibly-used-before-assignment
+        compiled_re = re.compile(regex, flags=re.IGNORECASE)  # pylint: disable=possibly-used-before-assignment
 
         timeout_timestmap = time.time() + timeout
         while time.time() <= timeout_timestmap:
@@ -117,7 +132,7 @@ class SerialHardware(object):
                     return True, rx_lines
         return False, []
 
-    def wait_for_re_string(self, regexstr=r'', timeout=30, return_all=False):
+    def wait_for_re_string(self, regexstr=r"", timeout=30, return_all=False):
         status, lines = self._read_until_re_match(status_re=regexstr, timeout=timeout)
         if status:
             if return_all:
@@ -139,7 +154,7 @@ class SerialHardware(object):
                 if self.debug_uart:
                     logger.debug(line)
                 rx_lines.append(line)
-                if line.startswith('<'):
+                if line.startswith("<"):
                     break
             if time.time() > timeout_timestmap:
                 logger.error(f"Timeout occured ({time.time()} > {timeout_timestmap})")
@@ -152,8 +167,12 @@ class SerialHardware(object):
         command = self.serialPrefix + command + self.serialSuffix
 
         if self.flush_on_write and self.port.in_waiting > 0:
-            logger.error("Warning: there were bytes in waiting when there should be none.")
-            logger.error(f"They were discarded. Port: `{self.port_info.name}` Description: `{self.description()}`")
+            logger.error(
+                "Warning: there were bytes in waiting when there should be none."
+            )
+            logger.error(
+                f"They were discarded. Port: `{self.port_info.name}` Description: `{self.description()}`"
+            )
 
         if self.flush_on_write:
             self.port.reset_input_buffer()
@@ -164,7 +183,11 @@ class SerialHardware(object):
             self.port.write(command.encode())
             return True
         except _serial.SerialTimeoutException:
-            logger.error("Warning: writing timed out. port: \"{}\" description \"{}\"".format(self.port_info.name, self.description()))
+            logger.error(
+                'Warning: writing timed out. port: "{}" description "{}"'.format(
+                    self.port_info.name, self.description()
+                )
+            )
             return False
 
     def handle_serial_read(self):
@@ -174,7 +197,11 @@ class SerialHardware(object):
             return ret
 
         except _serial.SerialTimeoutException:
-            logger.error("Warning: reading response timed out. port: \"{}\" description \"{}\"".format(self.port_info.name, self.description()))
+            logger.error(
+                'Warning: reading response timed out. port: "{}" description "{}"'.format(
+                    self.port_info.name, self.description()
+                )
+            )
             return None
 
         return None
@@ -185,7 +212,11 @@ class SerialHardware(object):
             self.lock.acquire()
             self.assert_open()
 
-            if not isinstance(payload, str) and not isinstance(payload, bytes) and not isinstance(payload, bytearray):
+            if (
+                not isinstance(payload, str)
+                and not isinstance(payload, bytes)
+                and not isinstance(payload, bytearray)
+            ):
                 raise TypeError("Serial_transaction expects str/bytes/bytearray")
 
             # Check if any messages were received
@@ -198,7 +229,7 @@ class SerialHardware(object):
             if not ignore_response:
                 rx_lines = self.read_until_response()
 
-            lines = rx_lines + lines    #pylint: disable=possibly-used-before-assignment
+            lines = rx_lines + lines  # pylint: disable=possibly-used-before-assignment
 
             return lines
         finally:

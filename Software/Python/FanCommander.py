@@ -1,6 +1,6 @@
+from base_logger import logger
 from serial.tools.list_ports import comports
 from serial_driver import SerialHardware
-from base_logger import logger
 
 
 class FanCommander(SerialHardware):
@@ -11,7 +11,7 @@ class FanCommander(SerialHardware):
 
     def _sendCommand(self, cmd, data=None):
         if isinstance(data, list):
-            data_str = ''.join('{:02X}'.format(x) for x in data)
+            data_str = "".join("{:02X}".format(x) for x in data)
         elif isinstance(data, int):
             data_str = f"{data:02X}"
         elif data is None:
@@ -29,7 +29,7 @@ class FanCommander(SerialHardware):
     def _parseResponse(self, response):
         for line in response:
             logger.debug(line)
-            if line.startswith('<'):
+            if line.startswith("<"):
                 logger.debug(f"Response: '{line}'")
                 return line
         return False
@@ -37,7 +37,7 @@ class FanCommander(SerialHardware):
     def _parse_fan_rpm(self, response):
         res = response.split("|")
         if len(res) >= 1:
-            fans_str = res[1].rstrip(';').split(";")
+            fans_str = res[1].rstrip(";").split(";")
 
             for fan in fans_str:
                 cnt, rpm = fan.split(":")
@@ -58,7 +58,7 @@ class FanCommander(SerialHardware):
 
     def set_fan_pwm(self, fan, pwm):
         if int(pwm) > 255:
-            raise ValueError(f'Invalid PWM value (`{pwm}`>255)')
+            raise ValueError(f"Invalid PWM value (`{pwm}`>255)")
 
         pwm = int(pwm * 255 / 100)
 
@@ -68,7 +68,7 @@ class FanCommander(SerialHardware):
 
     def set_all_fan_pwm(self, pwm):
         if int(pwm) > 255:
-            raise ValueError(f'Invalid PWM value (`{pwm}`>255)')
+            raise ValueError(f"Invalid PWM value (`{pwm}`>255)")
 
         pwm = int(pwm * 255 / 100)
 
@@ -78,7 +78,7 @@ class FanCommander(SerialHardware):
 
     def set_fan_rpm(self, fan, rpm):
         cmd = 0x04
-        data = [fan, (rpm>>8)&0xFF, rpm&0xFF]
+        data = [fan, (rpm >> 8) & 0xFF, rpm & 0xFF]
         return self._sendCommand(cmd, data)
 
     def get_hw_info(self):
@@ -90,7 +90,6 @@ class FanCommander(SerialHardware):
         cmd = 0x06
         data = None
         return self._sendCommand(cmd, data)
-
 
     @classmethod
     def find_fan_controller(cls):
@@ -105,14 +104,16 @@ class FanCommander(SerialHardware):
             logger.debug(f"\tLocation: {port.location}")
             logger.debug(f"\tInterface: {port.interface}")
             if port.vid == 0x2E8A and port.pid == 0x000A:
-                logger.debug("Using '{}' as Fan Controller COM port".format(port.description))
+                logger.debug(
+                    "Using '{}' as Fan Controller COM port".format(port.description)
+                )
                 return port
         return None
-
 
 
 def main():
     print("You should probably not use this module directly...")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

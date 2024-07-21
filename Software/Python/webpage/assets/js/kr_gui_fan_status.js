@@ -412,4 +412,3 @@ function update_value_slider()
 
     $('label[for="fan_value"]').text(label);
 }
-

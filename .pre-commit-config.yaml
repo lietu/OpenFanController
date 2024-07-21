@@ -1,0 +1,70 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: |
+          (?x)^(
+            .*Altium_Source_Files.*|
+            .*\.stl$|
+            .*\.step$|
+            ^NOT-EXISTING-LAST-ENTRY$
+          )$
+      - id: end-of-file-fixer
+        exclude: |
+          (?x)^(
+            .*Altium_Source_Files.*|
+            .*\.stl$|
+            .*\.step$|
+            ^NOT-EXISTING-LAST-ENTRY$
+          )$
+
+      # All non-bat files should end with LF unless generated or external etc.
+      - id: mixed-line-ending
+        name: Ensure LF endings on most files
+        args: ["--fix=lf"]
+        exclude: |
+          (?x)^(
+            \.bat$|
+            .*Altium_Source_Files.*|
+            .*\.stl$|
+            .*\.step$|
+            ^NOT-EXISTING-LAST-ENTRY$
+          )$
+      # Bat files should end with CRLF
+      - id: mixed-line-ending
+        name: Ensure CFLF endings on Windows files
+        args: ["--fix=crlf"]
+        files: \.bat$
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.4
+    hooks:
+      - id: ruff
+        name: ruff lint
+        args: [--fix]
+      - id: ruff
+        name: ruff sort imports
+        args: ["--select", "I", "--fix"]
+      - id: ruff-format
+        name: ruff format
+
+#  # You can probably only benefit from skjold vulnerability scans if using poetry for dependency management
+#  - repo: https://github.com/twu/skjold
+#    rev: v0.6.2
+#    hooks:
+#      - id: skjold
+#        verbose: true
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit
+        args:
+          - --configfile
+          - bandit.yaml
+        exclude: |
+          (?x)^(
+            .*/tests/.*|
+            ^NOT-EXISTING-LAST-ENTRY$
+          )$
